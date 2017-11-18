@@ -59,6 +59,7 @@ public class GPSController implements BeaconConsumer {
             @Override
             public void didExitRegion(Region region) {
                 Log.i(TAG, "\nI no longer see an beacon\n");
+
             }
 
             @Override

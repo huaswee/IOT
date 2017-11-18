@@ -21,8 +21,12 @@ import org.altbeacon.beacon.utils.UrlBeaconUrlCompressor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import Controller.BeaconController;
+import DAO.BeaconDAO;
 import Entity.Lot;
 
 public class BasicBeacon extends Activity implements BeaconConsumer {
@@ -92,6 +96,15 @@ public class BasicBeacon extends Activity implements BeaconConsumer {
             @Override
             public void didExitRegion(Region region) {
                 Log.i(TAG, "\nI no longer see an beacon\n");
+                HashMap<String, Lot> lotmap = BeaconDAO.getLots();
+
+                Iterator it = lotmap.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, Lot> pair = (Map.Entry)it.next();
+                    pair.getValue().setDist(null);
+                    pair.getValue().setCurCapacity(0);
+                    it.remove(); // avoids a ConcurrentModificationException
+                }
             }
 
             @Override
@@ -110,7 +123,8 @@ public class BasicBeacon extends Activity implements BeaconConsumer {
                         Log.d("SUCCESS BEACON", "ID = " + beaconID);
 
                         Lot lot = BeaconController.getBeacon(beaconID);
-                        lot.setDist((Double)beacon.getDistance());
+
+                        lot.setDist(beacon.getDistance());
                         lot.setCurCapacity(BeaconController.getBeaconCAP(beaconID));
                         Log.wtf("CHECK LOT", "Lot ID: " + beaconID + " Dist: " + lot.getDist() + " Cur Capacity: " + lot.getCurCapacity());
 
