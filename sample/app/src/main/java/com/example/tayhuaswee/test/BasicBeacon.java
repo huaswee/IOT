@@ -96,15 +96,17 @@ public class BasicBeacon extends Activity implements BeaconConsumer {
             @Override
             public void didExitRegion(Region region) {
                 Log.i(TAG, "\nI no longer see an beacon\n");
+                /*
                 HashMap<String, Lot> lotmap = BeaconDAO.getLots();
 
                 Iterator it = lotmap.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry<String, Lot> pair = (Map.Entry)it.next();
-                    pair.getValue().setDist(null);
+                    pair.getValue().setDist(Double.NaN);
                     pair.getValue().setCurCapacity(0);
                     it.remove(); // avoids a ConcurrentModificationException
                 }
+                */
             }
 
             @Override
@@ -123,7 +125,7 @@ public class BasicBeacon extends Activity implements BeaconConsumer {
                         Log.d("SUCCESS BEACON", "ID = " + beaconID);
 
                         Lot lot = BeaconController.getBeacon(beaconID);
-
+                        if (!Double.isNaN(beacon.getDistance()))
                         lot.setDist(beacon.getDistance());
                         lot.setCurCapacity(BeaconController.getBeaconCAP(beaconID));
                         Log.wtf("CHECK LOT", "Lot ID: " + beaconID + " Dist: " + lot.getDist() + " Cur Capacity: " + lot.getCurCapacity());
