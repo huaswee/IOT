@@ -54,8 +54,8 @@ public class BeaconDAO {
 
     }
 
-    public static void putLot(String beaconID, String desc, double gpsX, double gpsY, int curCapacity, int maxCapacity) {
-        Lot lot = new Lot(beaconID, desc, gpsX, gpsY, curCapacity, maxCapacity);
+    public static void putLot(String beaconID, String desc, double gpsX, double gpsY, int curCapacity, int maxCapacity, Double dist) {
+        Lot lot = new Lot(beaconID, desc, gpsX, gpsY, curCapacity, maxCapacity, dist);
         lotMap.put(beaconID, lot);
     }
 

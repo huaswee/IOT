@@ -1,6 +1,5 @@
 package com.example.xuan.beaconpatrol;
 
-import android.*;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -38,6 +37,7 @@ import java.util.Map;
 import Controller.*;
 import DAO.*;
 import Entity.Lot;
+import Entity.User;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, BeaconConsumer {
@@ -63,6 +63,8 @@ public class MapsActivity extends AppCompatActivity
     BeaconController beaconController = new BeaconController();
     BeaconDAO beaconDAO = new BeaconDAO();
 
+    GoogleMap googleMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,34 @@ public class MapsActivity extends AppCompatActivity
         Log.i(TAG, "\nEntering Get Location Permissions~~~\n");
         getLocationPermissions();
     }
+
+    public Map<String, Marker> detectedBeacons = new HashMap<String, Marker>();
+    public List<Lot> list = new ArrayList<Lot>();
+
+    public void refreshMarkers() {
+        Map<String, Marker> updatedBeacons = new HashMap<String, Marker>();
+        for (Lot beacon: list) {
+            // if marker exists move its location, if not add new marker
+            Marker marker = detectedBeacons.get(beacon.getBeaconID());
+            if (marker == null) {
+                LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
+                marker = googleMap.addMarker(new MarkerOptions().position(latlng));
+            }
+            else {
+                LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
+                marker.setPosition(latlng);
+                detectedBeacons.remove(beacon.getBeaconID());
+            }
+            updatedBeacons.put(beacon.getBeaconID(), marker);
+        }
+        // all markers that are left in markers list need to be deleted from the map
+        for (Marker marker : detectedBeacons.values()) {
+            marker.remove();
+        }
+
+        detectedBeacons = updatedBeacons;
+    }
+
 
     /**
      * Manipulates the map when it's available.
@@ -102,12 +132,17 @@ public class MapsActivity extends AppCompatActivity
         for (Map.Entry<String, Lot> beacon : lotMap.entrySet()) {
             String beaconID = beacon.getKey();
             LatLng latlng = new LatLng(beacon.getValue().getGpsX(), beacon.getValue().getGpsY());
-            //String beaconDescription = beacon.getDescription();
-            markers.add(googleMap.addMarker(new MarkerOptions().position(latlng).title(beacon.getValue().getDesc() + " | Capacity: "
-                    + beacon.getValue().getCurCapacity() + "/" + beacon.getValue().getMaxCapacity())));
+            String beaconDescription = beacon.getValue().getDesc();
+            int curCapacity = beacon.getValue().getCurCapacity();
+            int maxCapacity = beacon.getValue().getMaxCapacity();
+            Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng).title(beaconDescription + " | Capacity: "
+                    + curCapacity + "/" + maxCapacity));
+            markers.add(marker);
+            detectedBeacons.put(beaconID, marker);
         }
 
-        /*LatLng smu_sis = new LatLng(1.2973784, 103.8495219);
+        /*
+        LatLng smu_sis = new LatLng(1.2973784, 103.8495219);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_sis).title("SMU SIS Capacity: 1/5")));
 
         LatLng smu_soa = new LatLng(1.2956192, 103.8498277);
@@ -121,7 +156,8 @@ public class MapsActivity extends AppCompatActivity
 
         LatLng smu_sol = new LatLng(1.2948224, 103.8495096);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_sol).title("SMU SOL Capacity: 5/5")));
-*/
+        */
+
         // Zoom into Google Maps while fitting all markers inside
         final LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (Marker m : markers) {
@@ -135,6 +171,7 @@ public class MapsActivity extends AppCompatActivity
         googleMap.setOnInfoWindowClickListener(this);
     }
 
+    // When user clicks on marker info
     public void onInfoWindowClick(Marker marker) {
 
         Toast.makeText(this, "Hi " + name + ", you have $" + amount + " and " + points + " points.", Toast.LENGTH_LONG).show();
@@ -197,6 +234,7 @@ public class MapsActivity extends AppCompatActivity
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         beaconManager.bind(this);
+
     }
 
     @Override
