@@ -8,6 +8,8 @@ import android.os.RemoteException;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,6 +40,8 @@ import Controller.*;
 import DAO.*;
 import Entity.Lot;
 import Entity.User;
+
+import static com.example.xuan.beaconpatrol.R.id.button_0;
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, BeaconConsumer {
@@ -80,6 +84,15 @@ public class MapsActivity extends AppCompatActivity
         User user = new User();
         Log.i(TAG, "\nEntering Get Location Permissions~~~\n");
         getLocationPermissions();
+
+        final Button button = (Button) findViewById(button_0);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
+                refreshMarkers();
+            }
+        });
+
     }
 
     public Map<String, Marker> detectedBeacons = new HashMap<String, Marker>();
@@ -88,22 +101,29 @@ public class MapsActivity extends AppCompatActivity
     public void refreshMarkers() {
         Map<String, Marker> updatedBeacons = new HashMap<String, Marker>();
         for (Lot beacon: list) {
+
             // if marker exists move its location, if not add new marker
             Marker marker = detectedBeacons.get(beacon.getBeaconID());
+
             if (marker == null) {
                 LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
                 marker = googleMap.addMarker(new MarkerOptions().position(latlng));
-            }
-            else {
+
+            } else {
                 LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
                 marker.setPosition(latlng);
                 detectedBeacons.remove(beacon.getBeaconID());
+
             }
+
             updatedBeacons.put(beacon.getBeaconID(), marker);
         }
+
         // all markers that are left in markers list need to be deleted from the map
+
         for (Marker marker : detectedBeacons.values()) {
             marker.remove();
+
         }
 
         detectedBeacons = updatedBeacons;
@@ -163,6 +183,7 @@ public class MapsActivity extends AppCompatActivity
         for (Marker m : markers) {
             builder.include(m.getPosition());
         }
+
         LatLngBounds bounds = builder.build();
 
         final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 500, 500, 0);
