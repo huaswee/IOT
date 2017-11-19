@@ -96,26 +96,33 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public Map<String, Marker> detectedBeacons = new HashMap<String, Marker>();
+    public Map<String, Marker> updatedBeacons = new HashMap<String, Marker>();
     public List<Lot> list = new ArrayList<Lot>();
 
+
     public void refreshMarkers() {
-        Map<String, Marker> updatedBeacons = new HashMap<String, Marker>();
+        Log.d(TAG, "REFRESHING......");
+        Log.d(TAG, "REFRESHING START");
         for (Lot beacon: list) {
 
             // if marker exists move its location, if not add new marker
             Marker marker = detectedBeacons.get(beacon.getBeaconID());
 
             if (marker == null) {
+                Log.d(TAG, "ENTERING IF CONDITION......");
                 LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
-                marker = googleMap.addMarker(new MarkerOptions().position(latlng));
+                marker = googleMap.addMarker(new MarkerOptions().position(latlng).title(beacon.getDesc() + " | Capacity: "
+                        + beacon.getCurCapacity() + "/" + beacon.getMaxCapacity()));
 
             } else {
+                Log.d(TAG, "ENTERING ELSE CONDITION......");
+                Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
                 LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
                 marker.setPosition(latlng);
                 detectedBeacons.remove(beacon.getBeaconID());
 
             }
-
+            Log.d(TAG, "updatedBeacons: " + updatedBeacons.toString());
             updatedBeacons.put(beacon.getBeaconID(), marker);
         }
 
@@ -127,6 +134,9 @@ public class MapsActivity extends AppCompatActivity
         }
 
         detectedBeacons = updatedBeacons;
+        Log.d(TAG, "REFRESHING END");
+        Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
+        Log.d(TAG, "updatedBeacons: " + updatedBeacons.toString());
     }
 
 
@@ -150,6 +160,7 @@ public class MapsActivity extends AppCompatActivity
 
         //Loop through lotMap, get LatLng for each beacon
         for (Map.Entry<String, Lot> beacon : lotMap.entrySet()) {
+            list.add(beacon.getValue());
             String beaconID = beacon.getKey();
             LatLng latlng = new LatLng(beacon.getValue().getGpsX(), beacon.getValue().getGpsY());
             String beaconDescription = beacon.getValue().getDesc();
