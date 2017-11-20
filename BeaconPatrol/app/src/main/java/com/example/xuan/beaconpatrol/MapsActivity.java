@@ -95,48 +95,62 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
-    public Map<String, Marker> detectedBeacons = new HashMap<String, Marker>();
-    public Map<String, Marker> updatedBeacons = new HashMap<String, Marker>();
+
     public List<Lot> list = new ArrayList<Lot>();
 
 
     public void refreshMarkers() {
         Log.d(TAG, "REFRESHING......");
         Log.d(TAG, "REFRESHING START");
+
+        Map<String, Marker> detectedBeacons = new HashMap<String, Marker>();
+        //Map<String, Marker> updatedBeacons = new HashMap<String, Marker>();
+
+        //clear the markers on map
+        googleMap.clear();
+
+        Log.d(TAG, "CHECK IF LIST IS EMPTY: " + list.toString());
+
         for (Lot beacon: list) {
+            String beaconID = beacon.getBeaconID();
+            Log.d(TAG, "BEACON ID: " + beaconID);
+            Double distance = beacon.getDist();
+            Log.d(TAG, "BEACON DISTANCE: " + distance);
+            Marker marker = null;
 
-            // if marker exists move its location, if not add new marker
-            Marker marker = detectedBeacons.get(beacon.getBeaconID());
+            // if beacon distance > 0, place marker, else do nothing
 
-            if (marker == null) {
+            if (!distance.isNaN()) {
                 Log.d(TAG, "ENTERING IF CONDITION......");
                 LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
                 marker = googleMap.addMarker(new MarkerOptions().position(latlng).title(beacon.getDesc() + " | Capacity: "
                         + beacon.getCurCapacity() + "/" + beacon.getMaxCapacity()));
+                detectedBeacons.put(beaconID, marker);
 
             } else {
                 Log.d(TAG, "ENTERING ELSE CONDITION......");
                 Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
-                LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
+                /*LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
                 marker.setPosition(latlng);
-                detectedBeacons.remove(beacon.getBeaconID());
+                detectedBeacons.remove(beacon.getBeaconID());*/
 
             }
-            Log.d(TAG, "updatedBeacons: " + updatedBeacons.toString());
-            updatedBeacons.put(beacon.getBeaconID(), marker);
+            //Log.d(TAG, "updatedBeacons: " + updatedBeacons.toString());
+            //updatedBeacons.put(beacon.getBeaconID(), marker);
         }
 
         // all markers that are left in markers list need to be deleted from the map
 
         for (Marker marker : detectedBeacons.values()) {
-            marker.remove();
-
+            if (marker != null) {
+                marker.remove();
+            }
         }
 
-        detectedBeacons = updatedBeacons;
+        //detectedBeacons = updatedBeacons;
         Log.d(TAG, "REFRESHING END");
         Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
-        Log.d(TAG, "updatedBeacons: " + updatedBeacons.toString());
+
     }
 
 
@@ -161,16 +175,18 @@ public class MapsActivity extends AppCompatActivity
         //Loop through lotMap, get LatLng for each beacon
         for (Map.Entry<String, Lot> beacon : lotMap.entrySet()) {
             list.add(beacon.getValue());
+
             String beaconID = beacon.getKey();
             LatLng latlng = new LatLng(beacon.getValue().getGpsX(), beacon.getValue().getGpsY());
             String beaconDescription = beacon.getValue().getDesc();
             int curCapacity = beacon.getValue().getCurCapacity();
             int maxCapacity = beacon.getValue().getMaxCapacity();
+
+
             Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng).title(beaconDescription + " | Capacity: "
                     + curCapacity + "/" + maxCapacity));
+
             markers.add(marker);
-            detectedBeacons.put(beaconID, marker);
-        }
 
         /*
         LatLng smu_sis = new LatLng(1.2973784, 103.8495219);
@@ -189,18 +205,20 @@ public class MapsActivity extends AppCompatActivity
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_sol).title("SMU SOL Capacity: 5/5")));
         */
 
-        // Zoom into Google Maps while fitting all markers inside
-        final LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (Marker m : markers) {
-            builder.include(m.getPosition());
+            // Zoom into Google Maps while fitting all markers inside
+            final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (Marker m : markers) {
+                builder.include(m.getPosition());
+            }
+
+            LatLngBounds bounds = builder.build();
+
+            final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 500, 500, 0);
+            googleMap.animateCamera(cu);
+
+            googleMap.setOnInfoWindowClickListener(this);
+            this.googleMap = googleMap;
         }
-
-        LatLngBounds bounds = builder.build();
-
-        final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 500, 500, 0);
-        googleMap.animateCamera(cu);
-
-        googleMap.setOnInfoWindowClickListener(this);
     }
 
     // When user clicks on marker info
