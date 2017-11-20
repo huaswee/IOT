@@ -97,13 +97,13 @@ public class MapsActivity extends AppCompatActivity
 
 
     public List<Lot> list = new ArrayList<Lot>();
-
+    public Map<String, Marker> detectedBeacons = new HashMap<String, Marker>();
 
     public void refreshMarkers() {
         Log.d(TAG, "REFRESHING......");
         Log.d(TAG, "REFRESHING START");
 
-        Map<String, Marker> detectedBeacons = new HashMap<String, Marker>();
+
         //Map<String, Marker> updatedBeacons = new HashMap<String, Marker>();
 
         //clear the markers on map
@@ -122,13 +122,22 @@ public class MapsActivity extends AppCompatActivity
 
             if (!distance.isNaN()) {
                 Log.d(TAG, "ENTERING IF CONDITION......");
+                Log.d(TAG, "BEACON DETECTED");
+                Log.d(TAG, "PLACING MARKER ON MAP");
                 LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
+                Log.d(TAG, "MARKER COORDINATES: " + latlng);
+                Log.d(TAG, "MARKER DESCRIPTION: " + beacon.getDesc());
+                Log.d(TAG, "MARKER CUR_CAPACITY: " + beacon.getCurCapacity());
+                Log.d(TAG, "MARKER MAX_CAPACITY: " + beacon.getMaxCapacity());
                 marker = googleMap.addMarker(new MarkerOptions().position(latlng).title(beacon.getDesc() + " | Capacity: "
                         + beacon.getCurCapacity() + "/" + beacon.getMaxCapacity()));
+                Log.d(TAG, "MARKER PLACED");
                 detectedBeacons.put(beaconID, marker);
+                Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
 
             } else {
                 Log.d(TAG, "ENTERING ELSE CONDITION......");
+                Log.d(TAG, "BEACON NOT DETECTED");
                 Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
                 /*LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
                 marker.setPosition(latlng);
@@ -140,17 +149,17 @@ public class MapsActivity extends AppCompatActivity
         }
 
         // all markers that are left in markers list need to be deleted from the map
+        detectedBeacons.clear();
 
-        for (Marker marker : detectedBeacons.values()) {
+        /*for (Marker marker : detectedBeacons.values()) {
             if (marker != null) {
                 marker.remove();
             }
-        }
+        }*/
 
         //detectedBeacons = updatedBeacons;
         Log.d(TAG, "REFRESHING END");
         Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
-
     }
 
 
@@ -343,9 +352,8 @@ public class MapsActivity extends AppCompatActivity
                         Lot lot = BeaconController.getBeacon(beaconID);
                         if (!Double.isNaN(beacon.getDistance()))
                             lot.setDist(beacon.getDistance());
-                        lot.setCurCapacity(BeaconController.getBeaconCAP(beaconID));
-                        Log.wtf("CHECK LOT", "Lot ID: " + beaconID + " Dist: " + lot.getDist() + " Cur Capacity: " + lot.getCurCapacity());
-
+                            lot.setCurCapacity(BeaconController.getBeaconCAP(beaconID));
+                            Log.wtf("CHECK LOT", "Lot ID: " + beaconID + " Dist: " + lot.getDist() + " Cur Capacity: " + lot.getCurCapacity());
                     }
 
                     //Beacon beacon = beacons.iterator().next();
