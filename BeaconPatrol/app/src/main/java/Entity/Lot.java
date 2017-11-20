@@ -15,11 +15,11 @@ public class Lot {
     Double dist;
 
     public Lot(String beaconID) {
-        this(beaconID, "", 0.0, 0.0, 0, 1, null);
+        this(beaconID, "", 0.0, 0.0, 0, 1, Double.NaN);
     }
 
     public Lot(String beaconID, String desc, double gpsX, double gpsY, int curCapacity, int maxCapacity) {
-        this(beaconID, desc, gpsX, gpsY, curCapacity, maxCapacity, null);
+        this(beaconID, desc, gpsX, gpsY, curCapacity, maxCapacity, Double.NaN);
     }
 
     public Lot(String beaconID, String desc, double gpsX, double gpsY, int curCapacity, int maxCapacity, Double dist) {
