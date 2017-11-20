@@ -33,6 +33,7 @@ import org.altbeacon.beacon.Region;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -321,7 +322,7 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void didExitRegion(Region region) {
                 Log.i(TAG, "\nI no longer see an beacon\n");
-                /*
+
                 HashMap<String, Lot> lotmap = BeaconDAO.getLots();
 
                 Iterator it = lotmap.entrySet().iterator();
@@ -329,9 +330,9 @@ public class MapsActivity extends AppCompatActivity
                     Map.Entry<String, Lot> pair = (Map.Entry)it.next();
                     pair.getValue().setDist(Double.NaN);
                     pair.getValue().setCurCapacity(0);
-                    it.remove(); // avoids a ConcurrentModificationException
+                    //it.remove(); // avoids a ConcurrentModificationException
                 }
-                */
+
             }
 
             @Override

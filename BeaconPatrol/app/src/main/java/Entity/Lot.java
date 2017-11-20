@@ -81,11 +81,11 @@ public class Lot {
         this.desc = desc;
     }
 
-    public Double getDist() {
+    public synchronized Double getDist() {
         return dist;
     }
 
-    public void setDist(Double dist) {
+    public synchronized void setDist(Double dist) {
         this.dist = dist;
     }
 }
