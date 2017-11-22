@@ -2,6 +2,8 @@ package Controller;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -37,22 +39,24 @@ public class BeaconController {
             URL url = new URL(beaconServer  + beaconCAP + beaconID);
             Log.d("GETBEACONCAP", "url = " + url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
+            conn.setDoOutput(false);
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ");
             conn.setRequestProperty("Accept", "*/*");
-            wr = new OutputStreamWriter(conn.getOutputStream());
+            //wr = new OutputStreamWriter(conn.getOutputStream());
 
             int status = conn.getResponseCode();
             Log.d("GETBEACONCAP", Integer.toString(status));
             wr.flush();
-            Log.d("GETBEACONCAP", "Established");
+            //Log.d("GETBEACONCAP", "Established");
             // Get the response
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String output;
             while ((output = rd.readLine()) != null) {
-
-                Log.e("OUTPUT STREAM RESULT", output);
+                JSONObject jsonObj = new JSONObject(output);
+                result = jsonObj.getInt("CurrentCapacity");
+                System.out.println("Result = " + result);
+                //Log.e("OUTPUT STREAM RESULT", output);
             }
 
         } catch (Exception e) {
