@@ -26,7 +26,6 @@ public class BeaconController {
     static String beaconServer = "http://139.59.228.105:80/bikes/bp/";
     static String beaconCAP = "getCurrentCap/?bID=";
     static BufferedReader rd;
-    static OutputStreamWriter wr;
 
 
     public static int getBeaconCAP(String beaconID) {
@@ -58,9 +57,10 @@ public class BeaconController {
                 Log.w("GETBEACONCAP", "Result = " + result);            }
 
         } catch (Exception e) {
-            Log.d("ERROR IN CONNECTION", e.getStackTrace().toString());
+            Log.d("GETBEACONCAP", e.getStackTrace().toString());
         }
 
+        Log.d("GETBEACONCAP", "result = " + result);
         return result;
 
     }

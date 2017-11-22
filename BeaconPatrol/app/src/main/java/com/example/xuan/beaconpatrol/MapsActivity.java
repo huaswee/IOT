@@ -365,7 +365,7 @@ public class MapsActivity extends AppCompatActivity
                 while (it.hasNext()) {
                     Map.Entry<String, Lot> pair = (Map.Entry)it.next();
                     pair.getValue().setDist(Double.NaN);
-                    pair.getValue().setCurCapacity(0);
+                    //pair.getValue().setCurCapacity(0);
                     //it.remove(); // avoids a ConcurrentModificationException
                 }
                             }
