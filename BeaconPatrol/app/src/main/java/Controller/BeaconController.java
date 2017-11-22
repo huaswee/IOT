@@ -5,6 +5,7 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -20,7 +21,7 @@ import Entity.Lot;
 
 public class BeaconController {
 
-    static String beaconServer = "http://139.59.228.105/bikes/bp/";
+    static String beaconServer = "http://139.59.228.105:80/bikes/bp/";
     static String beaconCAP = "getCurrentCap/?bID=";
     static BufferedReader rd;
     static OutputStreamWriter wr;
@@ -35,9 +36,15 @@ public class BeaconController {
         try {
             URL url = new URL(beaconServer  + beaconCAP + beaconID);
             Log.d("GETBEACONCAP", "url = " + url);
-            URLConnection conn = url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ");
+            conn.setRequestProperty("Accept", "*/*");
             wr = new OutputStreamWriter(conn.getOutputStream());
+
+            int status = conn.getResponseCode();
+            Log.d("GETBEACONCAP", Integer.toString(status));
             wr.flush();
             Log.d("GETBEACONCAP", "Established");
             // Get the response

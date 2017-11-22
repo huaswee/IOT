@@ -30,4 +30,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:11.4.2'
     testCompile 'junit:junit:4.12'
     implementation files('libs/classes.jar')
+    implementation 'com.google.code.gson:gson:2.2.4'
 }
