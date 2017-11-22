@@ -21,30 +21,11 @@ public class BeaconDAO {
     static {
         lotMap.put("fda50693-a4e2-4fb1-afcf-c6eb07647825", new Lot("fda50693-a4e2-4fb1-afcf-c6eb07647825", "First Beacon", 1.2973784, 103.8495219, 0, 5));
         lotMap.put("0x02696f74736d757367303907", new Lot("0x02696f74736d757367303907", "Second Beacon", 1.2956192, 103.8498277, 0, 5));
+        lotMap.put("fda50693-a4e2-4fb1-afcf-c6eb07647869", new Lot("fda50693-a4e2-4fb1-afcf-c6eb07647869", "Third Beacon", 1.2952545, 103.8505429, 0, 5));
     }
 
     /*
-    private static final String getAllBeaconSmt = "Select * from Beacon";
 
-    public static HashMap<String, Lot> getAllLotData() {
-        try {
-            Connection conn = ConnectionManager.getConnection();
-            PreparedStatement smt = conn.prepareStatement(getAllBeaconSmt);
-            ResultSet rs = smt.executeQuery();
-
-            while (rs.last()) {
-                String id = rs.getString(1);
-                String cord = rs.getString(2);
-
-                Lot lot = new Lot(id, cord);
-
-                    lotMap.put(id, lot);
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         return lotMap;
     }
@@ -58,6 +39,7 @@ public class BeaconDAO {
         Lot lot = new Lot(beaconID, desc, gpsX, gpsY, curCapacity, maxCapacity, dist);
         lotMap.put(beaconID, lot);
     }
+
 
 
 

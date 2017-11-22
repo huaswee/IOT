@@ -20,31 +20,32 @@ import Entity.Lot;
 
 public class BeaconController {
 
-    static String beaconServer = "";
-    static String beaconCAP = "getBeaconCap/?";
+    static String beaconServer = "http://139.59.228.105/bikes/bp/";
+    static String beaconCAP = "getCurrentCap/?bID=";
     static BufferedReader rd;
     static OutputStreamWriter wr;
 
 
     public static int getBeaconCAP(String beaconID) {
-        return 2;
-        /*
+        //return 2;
+
         //where connection goes to
-        int result = 0;
+        int result = 2;
 
         try {
-            URL url = new URL(beaconServer + "?" + beaconCAP + "bID=" + beaconID);
+            URL url = new URL(beaconServer  + beaconCAP + beaconID);
+            Log.d("GETBEACONCAP", "url = " + url);
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             wr = new OutputStreamWriter(conn.getOutputStream());
             wr.flush();
-
+            Log.d("GETBEACONCAP", "Established");
             // Get the response
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String output;
             while ((output = rd.readLine()) != null) {
 
-                Log.d("OUTPUT STREAM RESULT", output);
+                Log.e("OUTPUT STREAM RESULT", output);
             }
 
         } catch (Exception e) {
@@ -52,7 +53,7 @@ public class BeaconController {
         }
 
         return result;
-        */
+
     }
 
     public static Lot getBeacon(String beaconID) {
