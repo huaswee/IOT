@@ -47,13 +47,12 @@ public class BeaconController {
 
             int status = conn.getResponseCode();
             Log.d("GETBEACONCAP", Integer.toString(status));
-            wr.flush();
             Log.d("GETBEACONCAP", "Established");
             // Get the response
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String output;
+            String output = null;
             while ((output = rd.readLine()) != null) {
-                //Log.e("GETBEACONCAP", output);
+                Log.e("GETBEACONCAP", output);
 				JSONObject jsonObj = new JSONObject(output);
                 result = jsonObj.getInt("CurrentCapacity");
                 Log.w("GETBEACONCAP", "Result = " + result);            }
