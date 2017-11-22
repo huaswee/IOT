@@ -121,7 +121,7 @@ public class MapsActivity extends AppCompatActivity
 
             // if beacon distance > 0, place marker, else do nothing
 
-            if (!distance.isNaN()) {
+            if (distance.isNaN() == false) {
                 Log.d(TAG, "ENTERING IF CONDITION......");
                 Log.d(TAG, "BEACON DETECTED");
                 Log.d(TAG, "PLACING MARKER ON MAP");
@@ -322,8 +322,7 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void didExitRegion(Region region) {
                 Log.i(TAG, "\nI no longer see an beacon\n");
-
-                HashMap<String, Lot> lotmap = BeaconDAO.getLots();
+                                HashMap<String, Lot> lotmap = BeaconDAO.getLots();
 
                 Iterator it = lotmap.entrySet().iterator();
                 while (it.hasNext()) {
@@ -332,8 +331,7 @@ public class MapsActivity extends AppCompatActivity
                     pair.getValue().setCurCapacity(0);
                     //it.remove(); // avoids a ConcurrentModificationException
                 }
-
-            }
+                            }
 
             @Override
             public void didDetermineStateForRegion(int state, Region region) {
