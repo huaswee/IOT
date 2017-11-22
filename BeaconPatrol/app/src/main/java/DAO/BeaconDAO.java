@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.Map;
 
 import Controller.BeaconController;
 import Entity.Lot;
@@ -21,11 +22,15 @@ public class BeaconDAO {
     //hardcoded list of values
     static {
         lotMap.put("fda50693-a4e2-4fb1-afcf-c6eb07647825", new Lot("fda50693-a4e2-4fb1-afcf-c6eb07647825", "First Beacon",
-                1.2973784, 103.8495219, BeaconController.getBeaconCAP("fda50693-a4e2-4fb1-afcf-c6eb07647825"), 20));
+                1.2973784, 103.8495219, 0, 20));
         lotMap.put("0x02696f74736d757367303907", new Lot("0x02696f74736d757367303907", "Second Beacon",
-                1.2956192, 103.8498277, BeaconController.getBeaconCAP("0x02696f74736d757367303907"), 20));
+                1.2956192, 103.8498277, 0, 20));
         lotMap.put("fda50693-a4e2-4fb1-afcf-c6eb07647869", new Lot("fda50693-a4e2-4fb1-afcf-c6eb07647869", "Third Beacon",
-                1.2952545, 103.8505429, BeaconController.getBeaconCAP("fda50693-a4e2-4fb1-afcf-c6eb07647869"), 20));
+                1.2952545, 103.8505429, 0, 20));
+        for (Map.Entry<String, Lot> pair : lotMap.entrySet()) {
+            Lot lot = pair.getValue();
+            lot.setCurCapacity(BeaconController.getBeaconCAP(lot.getBeaconID()));
+        }
     }
 
     /*
