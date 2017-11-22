@@ -3,6 +3,7 @@ package com.example.xuan.beaconpatrol;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -75,6 +77,7 @@ public class MapsActivity extends AppCompatActivity
     BeaconDAO beaconDAO = new BeaconDAO();
 
     GoogleMap googleMap;
+    ImageButton button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,17 +95,14 @@ public class MapsActivity extends AppCompatActivity
         Log.i(TAG, "\nEntering Get Location Permissions~~~\n");
         getLocationPermissions();
 
-        final Button button = (Button) findViewById(button_0);
+        button = (ImageButton) findViewById(button_0);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
-                refreshMarkers();
-                if (user.getHasBike() == true) {
+                if (hasBike) {
                     lockBike();
-                    user.setHasBike(false);
                 } else {
                     unlockBike();
-                    user.setHasBike(true);
                 }
             }
         });
@@ -130,6 +130,7 @@ public class MapsActivity extends AppCompatActivity
                         }
                         user.setPoints(points);
                         hasBike = false;
+                        button.setImageResource(R.drawable.unlock);
                         Toast.makeText(MapsActivity.this, "Hi " + name + ", after locking you have " + points + " points.", Toast.LENGTH_LONG).show();
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -155,6 +156,8 @@ public class MapsActivity extends AppCompatActivity
                             beaconController.unlockBike(currentBeaconDetected.getBeaconID());
                         }
                         hasBike = true;
+                        button.setImageResource(R.drawable.lock);
+
                         Toast.makeText(MapsActivity.this, "The bike has been unlocked! Ride safely and responsibly!", Toast.LENGTH_LONG).show();
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -231,7 +234,7 @@ public class MapsActivity extends AppCompatActivity
             //updatedBeacons.put(beacon.getBeaconID(), marker);
         }
 
-        if (beaconsDetected == 1) {
+        if (beaconsDetected >= 1) {
             isNearBeacon = true;
         } else {
             isNearBeacon = false;
