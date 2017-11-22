@@ -55,7 +55,7 @@ public class MapsActivity extends AppCompatActivity
         regions.add(new Region("iot26",
                 Identifier.parse("fda50693-a4e2-4fb1-afcf-c6eb07647825"), null, null));
         regions.add(new Region("iot09", Identifier.parse("0x02696f74736d757367303907"), null, null));
-        regions.add(new Region("iot37", Identifier.parse("fda50693-a4e2-4fb1-afcf-c6eb07647869"), null, null);
+        regions.add(new Region("iot37", Identifier.parse("fda50693-a4e2-4fb1-afcf-c6eb07647869"), null, null));
         //Identifier.parse("fda50693-a4e2-4fb1-afcf-c6eb07647825"), null, null));
 
     }
