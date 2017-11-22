@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import Controller.*;
 import DAO.*;
@@ -103,11 +106,12 @@ public class MapsActivity extends AppCompatActivity
                 }
             }
         });
+        callAsyncTask();
 
     }
 
     public void lockBike() {
-        Toast.makeText(this, "Hi " + name + ", you have" + points + " points.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Hi " + name + ", you have " + points + " points.", Toast.LENGTH_LONG).show();
 
         new AlertDialog.Builder(this).setTitle("Confirmation")
                 .setMessage("Do you want to lock your bike here?")
@@ -123,8 +127,6 @@ public class MapsActivity extends AppCompatActivity
                         } else {
                             //deduct from user points
                             points = user.getPoints() - 10;
-                            //add to currentCapacity
-                            getBeacon(currentBeaconDetected.getBeaconID()).setCurCapacity(currentBeaconDetected.getCurCapacity() + 1);
                         }
                         user.setPoints(points);
                         hasBike = false;
@@ -182,6 +184,8 @@ public class MapsActivity extends AppCompatActivity
 
         Log.d(TAG, "CHECK IF LIST IS EMPTY: " + list.toString());
 
+        int beaconsDetected = 0;
+
         for (Lot beacon: list) {
             String beaconID = beacon.getBeaconID();
             Log.d(TAG, "BEACON ID: " + beaconID);
@@ -189,16 +193,17 @@ public class MapsActivity extends AppCompatActivity
             Log.d(TAG, "BEACON DISTANCE: " + distance);
             Marker marker = null;
 
+
             // if beacon distance > 0, place marker, else do nothing
 
             if (distance.isNaN() == false) {
                 Log.d(TAG, "BEACON DETECTED");
                 currentBeaconDetected = beacon;
-                isNearBeacon = true;
+                beaconsDetected++;
             } else {
                 Log.d(TAG, "BEACON NOT DETECTED");
-                currentBeaconDetected = null;
-                isNearBeacon = false;
+                //currentBeaconDetected = null;
+                //isNearBeacon = false;
             }
 
             Log.d(TAG, "PLACING MARKER ON MAP");
@@ -226,6 +231,11 @@ public class MapsActivity extends AppCompatActivity
             //updatedBeacons.put(beacon.getBeaconID(), marker);
         }
 
+        if (beaconsDetected == 1) {
+            isNearBeacon = true;
+        } else {
+            isNearBeacon = false;
+        }
 
 
         /*for (Marker marker : detectedBeacons.values()) {
@@ -240,6 +250,35 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
+    public void callAsyncTask(){
+        Log.wtf("Entering AsyncTask", "Entering AsyncTask");
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsyncTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+
+                            // put your code here
+                            Log.wtf("Entering AsyncTask", "refreshingMarkers");
+                            refreshMarkers();
+
+                        }catch (Exception e){
+
+
+                        }
+
+                    }
+                });
+            }
+        };
+
+        timer.schedule(doAsyncTask,0,10000);
+
+    }
 
     /**
      * Manipulates the map when it's available.

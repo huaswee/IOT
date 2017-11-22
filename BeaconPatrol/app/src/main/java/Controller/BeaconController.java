@@ -33,7 +33,7 @@ public class BeaconController {
         //return 2;
 
         //where connection goes to
-        int result = 2;
+        int result = 7;
 
         try {
             URL url = new URL(beaconServer  + beaconCAP + beaconID);
