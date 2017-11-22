@@ -43,9 +43,10 @@ public class BeaconController {
             // Get the response
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String output;
+            Log.wtf("GETBEACONCAP", rd.toString());
             while ((output = rd.readLine()) != null) {
 
-                Log.e("OUTPUT STREAM RESULT", output);
+                Log.e("GETBEACONCAP", output);
             }
 
         } catch (Exception e) {

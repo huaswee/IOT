@@ -8,11 +8,13 @@
         android:id="@+id/button_0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|top"
-        android:text="Scan for Beacons"
-        android:padding="1dp"
-        android:layout_marginTop="20dp"
-        android:paddingRight="1dp"/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="50dp"
+        android:padding="50dp"
+        android:paddingRight="10dp"
+        android:text="Lock / Unlock Bike" />
 
 
 
