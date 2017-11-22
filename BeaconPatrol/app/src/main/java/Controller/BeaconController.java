@@ -53,10 +53,10 @@ public class BeaconController {
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String output;
             while ((output = rd.readLine()) != null) {
-                Log.e("GETBEACONCAP", output);
+                //Log.e("GETBEACONCAP", output);
 				JSONObject jsonObj = new JSONObject(output);
                 result = jsonObj.getInt("CurrentCapacity");
-                System.out.println("Result = " + result);            }
+                Log.w("GETBEACONCAP", "Result = " + result);            }
 
         } catch (Exception e) {
             Log.d("ERROR IN CONNECTION", e.getStackTrace().toString());
