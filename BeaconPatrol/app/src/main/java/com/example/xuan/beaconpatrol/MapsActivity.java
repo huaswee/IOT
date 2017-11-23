@@ -4,6 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,6 +38,7 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -57,6 +63,7 @@ public class MapsActivity extends AppCompatActivity
     private BeaconManager beaconManager;
     static final int MY_PERMISSIONS_REQUEST_Location = 1;
     static ArrayList<Region> regions = new ArrayList<Region>();
+
     static {
         regions.add(new Region("iot26", Identifier.parse("fda50693-a4e2-4fb1-afcf-c6eb07647825"), null, null));
         regions.add(new Region("iot09", Identifier.parse("0x02696f74736d757367303907"), null, null));
@@ -78,6 +85,8 @@ public class MapsActivity extends AppCompatActivity
 
     GoogleMap googleMap;
     ImageButton button;
+
+    LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +185,6 @@ public class MapsActivity extends AppCompatActivity
         Log.d(TAG, "REFRESHING......");
         Log.d(TAG, "REFRESHING START");
 
-
         //Map<String, Marker> updatedBeacons = new HashMap<String, Marker>();
 
         //clear the markers on map
@@ -189,7 +197,7 @@ public class MapsActivity extends AppCompatActivity
 
         int beaconsDetected = 0;
 
-        for (Lot beacon: list) {
+        for (Lot beacon : list) {
             String beaconID = beacon.getBeaconID();
             Log.d(TAG, "BEACON ID: " + beaconID);
             Double distance = beacon.getDist();
@@ -251,9 +259,10 @@ public class MapsActivity extends AppCompatActivity
         Log.d(TAG, "REFRESHING END");
         Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
 
+
     }
 
-    public void callAsyncTask(){
+    public void callAsyncTask() {
         Log.wtf("Entering AsyncTask", "Entering AsyncTask");
         final Handler handler = new Handler();
         Timer timer = new Timer();
@@ -263,13 +272,12 @@ public class MapsActivity extends AppCompatActivity
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        try{
+                        try {
 
                             // put your code here
                             Log.wtf("Entering AsyncTask", "refreshingMarkers");
                             refreshMarkers();
-
-                        }catch (Exception e){
+                        } catch (Exception e) {
 
 
                         }
@@ -279,7 +287,7 @@ public class MapsActivity extends AppCompatActivity
             }
         };
 
-        timer.schedule(doAsyncTask,0,10000);
+        timer.schedule(doAsyncTask, 0, 10000);
 
     }
 
@@ -294,7 +302,17 @@ public class MapsActivity extends AppCompatActivity
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
         // Get all the beacons from database
         HashMap<String, Lot> lotMap = beaconDAO.getLots();
 
