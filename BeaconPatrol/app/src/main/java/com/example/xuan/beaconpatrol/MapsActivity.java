@@ -245,7 +245,6 @@ public class MapsActivity extends AppCompatActivity
                 LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
                 marker.setPosition(latlng);
                 detectedBeacons.remove(beacon.getBeaconID());
-
             }*/
             //Log.d(TAG, "updatedBeacons: " + updatedBeacons.toString());
             //updatedBeacons.put(beacon.getBeaconID(), marker);
@@ -359,16 +358,12 @@ public class MapsActivity extends AppCompatActivity
         /*
         LatLng smu_sis = new LatLng(1.2973784, 103.8495219);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_sis).title("SMU SIS Capacity: 1/5")));
-
         LatLng smu_soa = new LatLng(1.2956192, 103.8498277);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_soa).title("SMU SOA Capacity: 2/5")));
-
         LatLng smu_sob = new LatLng(1.2952545, 103.8505429);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_sob).title("SMU SOB Capacity: 3/5")));
-
         LatLng smu_soe = new LatLng(1.2979327, 103.8489191);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_soe).title("SMU SOE Capacity: 4/5")));
-
         LatLng smu_sol = new LatLng(1.2948224, 103.8495096);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_sol).title("SMU SOL Capacity: 5/5")));
         */
