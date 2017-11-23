@@ -3,10 +3,6 @@ package com.example.xuan.beaconpatrol;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -24,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -38,7 +34,6 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -202,7 +197,7 @@ public class MapsActivity extends AppCompatActivity
             Log.d(TAG, "BEACON ID: " + beaconID);
             Double distance = beacon.getDist();
             Log.d(TAG, "BEACON DISTANCE: " + distance);
-            Marker marker = null;
+            Marker marker;
 
 
             // if beacon distance > 0, place marker, else do nothing
@@ -223,8 +218,22 @@ public class MapsActivity extends AppCompatActivity
             Log.d(TAG, "MARKER DESCRIPTION: " + beacon.getDesc());
             Log.d(TAG, "MARKER CUR_CAPACITY: " + beacon.getCurCapacity());
             Log.d(TAG, "MARKER MAX_CAPACITY: " + beacon.getMaxCapacity());
-            marker = googleMap.addMarker(new MarkerOptions().position(latlng).title(beacon.getDesc() + " | Capacity: "
-                    + beacon.getCurCapacity() + "/" + beacon.getMaxCapacity()));
+
+            MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(beacon.getDesc() + " | Capacity: "
+                    + beacon.getCurCapacity() + "/" + beacon.getMaxCapacity());
+
+            // check current capacity and change colour before placing onto the map
+            if(beacon.getCurCapacity() <= 15) {
+                //under capacity
+                marker = googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            } else if(beacon.getCurCapacity() < 20) {
+                //nearing capacity
+                marker = googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+            }else {
+                //full or overcapacity
+                marker = googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+            }
+
             Log.d(TAG, "MARKER PLACED");
             detectedBeacons.put(beaconID, marker);
             Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
@@ -328,10 +337,22 @@ public class MapsActivity extends AppCompatActivity
             String beaconDescription = beacon.getValue().getDesc();
             int curCapacity = beacon.getValue().getCurCapacity();
             int maxCapacity = beacon.getValue().getMaxCapacity();
+            Marker marker;
 
+            MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(beaconDescription + " | Capacity: "
+                    + curCapacity + "/" + maxCapacity);
 
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng).title(beaconDescription + " | Capacity: "
-                    + curCapacity + "/" + maxCapacity));
+            // check current capacity and change colour before placing onto the map
+            if(curCapacity <= 15) {
+                //under capacity
+                marker = googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            } else if(curCapacity < 20) {
+                //nearing capacity
+                marker = googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+            }else {
+                //full or overcapacity
+                marker = googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+            }
 
             markers.add(marker);
 
