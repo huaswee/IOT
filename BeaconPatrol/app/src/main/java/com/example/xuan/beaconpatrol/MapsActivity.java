@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -111,11 +112,19 @@ public class MapsActivity extends AppCompatActivity
             }
         });
         callAsyncTask();
+        updatePoints();
+    }
 
+    public void updatePoints() {
+        String message = getString(R.string.points);
+        message += user.getPoints();
+
+        TextView textView = (TextView) findViewById(R.id.textView);
+        textView.setText(message);
     }
 
     public void lockBike() {
-        Toast.makeText(this, "Hi " + name + ", you have " + points + " points.", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Hi " + name + ", you have " + points + " points.", Toast.LENGTH_LONG).show();
 
         new AlertDialog.Builder(this).setTitle("Confirmation")
                 .setMessage("Do you want to lock your bike here?")
@@ -128,14 +137,18 @@ public class MapsActivity extends AppCompatActivity
                             points = user.getPoints() + 5;
                             //add to currentCapacity
                             beaconController.lockBike(currentBeaconDetected.getBeaconID());
+                            user.setPoints(points);
+                            Toast.makeText(MapsActivity.this, "Hurray! You have successfully parked your bike in a designated bike shed. You have been awarded 5 points! ", Toast.LENGTH_LONG).show();
                         } else {
                             //deduct from user points
                             points = user.getPoints() - 10;
+                            user.setPoints(points);
+                            //Toast.makeText(MapsActivity.this, "Hi " + name + ", after locking you have " + points + " points.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MapsActivity.this, "Oh no! Looks like you did not park your bike in a designated bike shed. 10 points has been deducted as a penalty! ", Toast.LENGTH_LONG).show();
                         }
-                        user.setPoints(points);
                         hasBike = false;
                         button.setImageResource(R.drawable.unlock);
-                        Toast.makeText(MapsActivity.this, "Hi " + name + ", after locking you have " + points + " points.", Toast.LENGTH_LONG).show();
+                        updatePoints();
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -147,7 +160,6 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public void unlockBike() {
-        Toast.makeText(this, "Hi " + name + ", you have " + points + " points.", Toast.LENGTH_LONG).show();
 
         new AlertDialog.Builder(this).setTitle("Confirmation")
                 .setMessage("Do you want to unlock a bike here?")
@@ -161,7 +173,6 @@ public class MapsActivity extends AppCompatActivity
                         }
                         hasBike = true;
                         button.setImageResource(R.drawable.lock);
-
                         Toast.makeText(MapsActivity.this, "The bike has been unlocked! Ride safely and responsibly!", Toast.LENGTH_LONG).show();
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
