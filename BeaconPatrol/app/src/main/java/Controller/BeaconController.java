@@ -92,6 +92,8 @@ public class BeaconController {
 //                result = jsonObj.getInt("CurrentCapacity");
 //                Log.w("GETBEACONCAP", "Result = " + result);            }
             conn.disconnect();
+            Lot lot = getBeacon(beaconID);
+            lot.setCurCapacity(getBeaconCAP(beaconID));
         } catch (Exception e) {
             Log.d("LOCKBIKE", e.getStackTrace().toString());
         }
@@ -124,6 +126,8 @@ public class BeaconController {
 //                result = jsonObj.getInt("CurrentCapacity");
 //                Log.w("GETBEACONCAP", "Result = " + result);            }
             conn.disconnect();
+            Lot lot = getBeacon(beaconID);
+            lot.setCurCapacity(getBeaconCAP(beaconID));
         } catch (Exception e) {
             Log.d("UNLOCKBIKE", e.getStackTrace().toString());
         }
