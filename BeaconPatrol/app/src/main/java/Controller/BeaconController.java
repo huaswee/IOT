@@ -78,8 +78,10 @@ public class BeaconController {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ");
             conn.setRequestProperty("Accept", "*/*");
+            conn.setInstanceFollowRedirects(false);
             //wr = new OutputStreamWriter(conn.getOutputStream());
             conn.connect();
+            conn.getRequestMethod();
             int status = conn.getResponseCode();
             //Log.d("LOCKBIKE", Integer.toString(status));
             //Log.d("LOCKBIKE", "Bike Sent");
