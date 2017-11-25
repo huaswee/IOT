@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">BeaconPatrol</string>
     <string name="title_activity_maps">BeaconPatrol</string>
+    <string name="points">Points:</string>
 </resources>
