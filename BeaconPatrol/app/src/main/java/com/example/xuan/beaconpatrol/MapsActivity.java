@@ -93,11 +93,11 @@ public class MapsActivity extends AppCompatActivity
         // when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        Log.wtf("Entering MapAsync...", "Entering Map");
+        //.wtf("Entering MapAsync...", "Entering Map");
         mapFragment.getMapAsync(this);
-        Log.wtf("Entering MapAsync...", "Out of Map");
+        //Log.wtf("Entering MapAsync...", "Out of Map");
         final User user = new User();
-        Log.i(TAG, "\nEntering Get Location Permissions~~~\n");
+        //Log.i(TAG, "\nEntering Get Location Permissions~~~\n");
         getLocationPermissions();
 
         button = (ImageButton) findViewById(button_0);
@@ -188,8 +188,8 @@ public class MapsActivity extends AppCompatActivity
     public Map<String, Marker> detectedBeacons = new HashMap<String, Marker>();
 
     public void refreshMarkers() {
-        Log.d(TAG, "REFRESHING......");
-        Log.d(TAG, "REFRESHING START");
+        //Log.d(TAG, "REFRESHING......");
+        //Log.d(TAG, "REFRESHING START");
 
         //Map<String, Marker> updatedBeacons = new HashMap<String, Marker>();
 
@@ -199,36 +199,36 @@ public class MapsActivity extends AppCompatActivity
         // all existing markers that are left in markers list need to be cleared
         detectedBeacons.clear();
 
-        Log.d(TAG, "CHECK IF LIST IS EMPTY: " + list.toString());
+        //Log.d(TAG, "CHECK IF LIST IS EMPTY: " + list.toString());
 
         int beaconsDetected = 0;
 
         for (Lot beacon : list) {
             String beaconID = beacon.getBeaconID();
-            Log.d(TAG, "BEACON ID: " + beaconID);
+            //Log.d(TAG, "BEACON ID: " + beaconID);
             Double distance = beacon.getDist();
-            Log.d(TAG, "BEACON DISTANCE: " + distance);
+            //Log.d(TAG, "BEACON DISTANCE: " + distance);
             Marker marker;
 
 
             // if beacon distance > 0, place marker, else do nothing
 
             if (distance.isNaN() == false) {
-                Log.d(TAG, "BEACON DETECTED");
+                //Log.d(TAG, "BEACON DETECTED");
                 currentBeaconDetected = beacon;
                 beaconsDetected++;
             } else {
-                Log.d(TAG, "BEACON NOT DETECTED");
+                //Log.d(TAG, "BEACON NOT DETECTED");
                 //currentBeaconDetected = null;
                 //isNearBeacon = false;
             }
 
-            Log.d(TAG, "PLACING MARKER ON MAP");
+            //Log.d(TAG, "PLACING MARKER ON MAP");
             LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
-            Log.d(TAG, "MARKER COORDINATES: " + latlng);
-            Log.d(TAG, "MARKER DESCRIPTION: " + beacon.getDesc());
-            Log.d(TAG, "MARKER CUR_CAPACITY: " + beacon.getCurCapacity());
-            Log.d(TAG, "MARKER MAX_CAPACITY: " + beacon.getMaxCapacity());
+            //Log.d(TAG, "MARKER COORDINATES: " + latlng);
+            //Log.d(TAG, "MARKER DESCRIPTION: " + beacon.getDesc());
+            //Log.d(TAG, "MARKER CUR_CAPACITY: " + beacon.getCurCapacity());
+            //Log.d(TAG, "MARKER MAX_CAPACITY: " + beacon.getMaxCapacity());
 
             MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(beacon.getDesc() + " | Capacity: "
                     + beacon.getCurCapacity() + "/" + beacon.getMaxCapacity());
@@ -245,9 +245,9 @@ public class MapsActivity extends AppCompatActivity
                 marker = googleMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             }
 
-            Log.d(TAG, "MARKER PLACED");
+            //Log.d(TAG, "MARKER PLACED");
             detectedBeacons.put(beaconID, marker);
-            Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
+            //Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
 
             /*} else {
                 Log.d(TAG, "ENTERING ELSE CONDITION......");
@@ -275,14 +275,14 @@ public class MapsActivity extends AppCompatActivity
         }*/
 
         //detectedBeacons = updatedBeacons;
-        Log.d(TAG, "REFRESHING END");
-        Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
+        //Log.d(TAG, "REFRESHING END");
+        //Log.d(TAG, "detectedBeacons: " + detectedBeacons.toString());
 
 
     }
 
     public void callAsyncTask() {
-        Log.wtf("Entering AsyncTask", "Entering AsyncTask");
+        //Log.wtf("Entering AsyncTask", "Entering AsyncTask");
         final Handler handler = new Handler();
         Timer timer = new Timer();
         TimerTask doAsyncTask = new TimerTask() {
@@ -294,7 +294,7 @@ public class MapsActivity extends AppCompatActivity
                         try {
 
                             // put your code here
-                            Log.wtf("Entering AsyncTask", "refreshingMarkers");
+                            //Log.wtf("Entering AsyncTask", "refreshingMarkers");
                             refreshMarkers();
                         } catch (Exception e) {
 
@@ -435,17 +435,17 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onBeaconServiceConnect() {
-        Log.i(TAG, "\nEntered OnBeaconServiceConnect!!!\n");
+        //Log.i(TAG, "\nEntered OnBeaconServiceConnect!!!\n");
         beaconManager.addMonitorNotifier(new MonitorNotifier() {
             @Override
             public void didEnterRegion(Region region) {
-                Log.d(TAG, "I detected a beacon in the region with namespace id " + region.getId1() +
-                        " and instance id: " + region.getId2());
+                //Log.d(TAG, "I detected a beacon in the region with namespace id " + region.getId1() +
+                        //" and instance id: " + region.getId2());
             }
 
             @Override
             public void didExitRegion(Region region) {
-                Log.i(TAG, "\nI no longer see an beacon\n");
+                //Log.i(TAG, "\nI no longer see an beacon\n");
                 HashMap<String, Lot> lotmap = BeaconDAO.getLots();
 
                 Iterator it = lotmap.entrySet().iterator();
@@ -459,7 +459,7 @@ public class MapsActivity extends AppCompatActivity
 
             @Override
             public void didDetermineStateForRegion(int state, Region region) {
-                Log.i(TAG, "\nI have just switched from seeing/not seeing beacons: " +state + "\n");
+                //Log.i(TAG, "\nI have just switched from seeing/not seeing beacons: " +state + "\n");
             }
         });
 
@@ -468,15 +468,15 @@ public class MapsActivity extends AppCompatActivity
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 if (beacons.size() > 0) {
                     for (Beacon beacon : beacons) {
-                        Log.i(TAG, "The first beacon I see is about "+beacon.getDistance()+" meters away.");
+                        //Log.i(TAG, "The first beacon I see is about "+beacon.getDistance()+" meters away.");
                         String beaconID = beacon.getId1().toString();
-                        Log.d("SUCCESS BEACON", "ID = " + beaconID);
+                        //Log.d("SUCCESS BEACON", "ID = " + beaconID);
 
                         Lot lot = getBeacon(beaconID);
                         if (!Double.isNaN(beacon.getDistance()))
                             lot.setDist(beacon.getDistance());
                         lot.setCurCapacity(BeaconController.getBeaconCAP(beaconID));
-                        Log.wtf("CHECK LOT", "Lot ID: " + beaconID + " Dist: " + lot.getDist() + " Cur Capacity: " + lot.getCurCapacity());
+                        //Log.wtf("CHECK LOT", "Lot ID: " + beaconID + " Dist: " + lot.getDist() + " Cur Capacity: " + lot.getCurCapacity());
                     }
 
                     //Beacon beacon = beacons.iterator().next();
@@ -488,19 +488,19 @@ public class MapsActivity extends AppCompatActivity
         });
 
         try {
-            Log.i(TAG, "\nStarting Beacon Monitor...\n");
+            //Log.i(TAG, "\nStarting Beacon Monitor...\n");
             for (Region region: regions) {
                 beaconManager.startMonitoringBeaconsInRegion(region);
                 beaconManager.startRangingBeaconsInRegion(region);
             }
 
         } catch (RemoteException e) {
-            Log.i(TAG, "\nREMOTE EXCEPTION OCCURED.\n");
+            //Log.i(TAG, "\nREMOTE EXCEPTION OCCURED.\n");
         }
     }
 
     public void getLocationPermissions() {
-        Log.i(TAG, "\nDisplaying Get Location Permissions...!!!\n");
+        //Log.i(TAG, "\nDisplaying Get Location Permissions...!!!\n");
         ActivityCompat.requestPermissions(this,
                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSIONS_REQUEST_Location);
@@ -508,9 +508,9 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        Log.i(TAG, "\nEntered Permission Results!!!\nRequest Code = " + requestCode +
-                " and My Location = " + MY_PERMISSIONS_REQUEST_Location + "\n" +
-                "GrantResults.length = " + grantResults.length + " ");
+        //Log.i(TAG, "\nEntered Permission Results!!!\nRequest Code = " + requestCode +
+                //" and My Location = " + MY_PERMISSIONS_REQUEST_Location + "\n" +
+                //"GrantResults.length = " + grantResults.length + " ");
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_Location: {
                 // If request is cancelled, the result arrays are empty.
@@ -520,7 +520,7 @@ public class MapsActivity extends AppCompatActivity
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
-                    Log.i(TAG, "\nInitializing BeaconManager...\n");
+                    //Log.i(TAG, "\nInitializing BeaconManager...\n");
                     beaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
                     // To detect proprietary beacons, you must add a line like below corresponding to your beacon
                     // type.  Do a web search for "setBeaconLayout" to get the proper expression.
@@ -539,7 +539,7 @@ public class MapsActivity extends AppCompatActivity
 
                     //beaconManager.setForegroundScanPeriod(10000);
                     beaconManager.bind(this);
-                    Log.i(TAG, "\nCompleted Initializing....\n");
+                    //Log.i(TAG, "\nCompleted Initializing....\n");
                 } else {
 
                     // permission denied, boo! Disable the

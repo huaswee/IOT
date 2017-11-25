@@ -38,7 +38,7 @@ public class BeaconController {
 
         try {
             URL url = new URL(beaconServer  + beaconCAP + beaconID);
-            Log.d("GETBEACONCAP", "url = " + url);
+            //Log.d("GETBEACONCAP", "url = " + url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(false);
             conn.setRequestMethod("GET");
@@ -47,23 +47,23 @@ public class BeaconController {
             //wr = new OutputStreamWriter(conn.getOutputStream());
 
             int status = conn.getResponseCode();
-            Log.d("GETBEACONCAP", Integer.toString(status));
-            Log.d("GETBEACONCAP", "Established");
+            //Log.d("GETBEACONCAP", Integer.toString(status));
+            //Log.d("GETBEACONCAP", "Established");
             // Get the response
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String output = null;
             while ((output = rd.readLine()) != null) {
-                Log.e("GETBEACONCAP", output);
+                //Log.e("GETBEACONCAP", output);
 				JSONObject jsonObj = new JSONObject(output);
                 result = jsonObj.getInt("CurrentCapacity");
-                Log.w("GETBEACONCAP", "Result = " + result);
+                //Log.w("GETBEACONCAP", "Result = " + result);
             }
             conn.disconnect();
         } catch (Exception e) {
-            Log.d("GETBEACONCAP", e.getStackTrace().toString());
+            //Log.d("GETBEACONCAP", e.getStackTrace().toString());
         }
 
-        Log.d("GETBEACONCAP", "result = " + result);
+        //Log.d("GETBEACONCAP", "result = " + result);
 
         return result;
 
@@ -72,7 +72,7 @@ public class BeaconController {
     public static void lockBike(String beaconID) {
         try {
             URL url = new URL(beaconServer  + lockBike + beaconID);
-            Log.d("LOCKBIKE", "url = " + url);
+            //Log.d("LOCKBIKE", "url = " + url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(false);
             conn.setRequestMethod("GET");
@@ -81,8 +81,8 @@ public class BeaconController {
             //wr = new OutputStreamWriter(conn.getOutputStream());
             conn.connect();
             int status = conn.getResponseCode();
-            Log.d("LOCKBIKE", Integer.toString(status));
-            Log.d("LOCKBIKE", "Bike Sent");
+            //Log.d("LOCKBIKE", Integer.toString(status));
+            //Log.d("LOCKBIKE", "Bike Sent");
             // Get the response
 //            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 //            String output = null;
@@ -95,7 +95,7 @@ public class BeaconController {
             Lot lot = getBeacon(beaconID);
             lot.setCurCapacity(getBeaconCAP(beaconID));
         } catch (Exception e) {
-            Log.d("LOCKBIKE", e.getStackTrace().toString());
+            //Log.d("LOCKBIKE", e.getStackTrace().toString());
         }
 
 
@@ -106,7 +106,7 @@ public class BeaconController {
 
         try {
             URL url = new URL(beaconServer  + unlockBike + beaconID);
-            Log.d("UNLOCKBIKE", "url = " + url);
+            //Log.d("UNLOCKBIKE", "url = " + url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(false);
             conn.setRequestMethod("GET");
@@ -115,8 +115,8 @@ public class BeaconController {
             //wr = new OutputStreamWriter(conn.getOutputStream());
             conn.connect();
             int status = conn.getResponseCode();
-            Log.d("UNLOCKBIKE", Integer.toString(status));
-            Log.d("UNLOCKBIKE", "Bike Sent");
+            //Log.d("UNLOCKBIKE", Integer.toString(status));
+            //Log.d("UNLOCKBIKE", "Bike Sent");
             // Get the response
 //            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 //            String output = null;
@@ -129,7 +129,7 @@ public class BeaconController {
             Lot lot = getBeacon(beaconID);
             lot.setCurCapacity(getBeaconCAP(beaconID));
         } catch (Exception e) {
-            Log.d("UNLOCKBIKE", e.getStackTrace().toString());
+            //Log.d("UNLOCKBIKE", e.getStackTrace().toString());
         }
 
     }
