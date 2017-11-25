@@ -11,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -101,23 +100,17 @@ public class MapsActivity extends AppCompatActivity
         Log.i(TAG, "\nEntering Get Location Permissions~~~\n");
         getLocationPermissions();
 
-        final Button button = (Button) findViewById(button_0);
         button = (ImageButton) findViewById(button_0);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
-                refreshMarkers();
-                if (user.getHasBike() == true) {
                 if (hasBike) {
                     lockBike();
-                    user.setHasBike(false);
                 } else {
                     unlockBike();
-                    user.setHasBike(true);
                 }
             }
         });
-
         callAsyncTask();
         updatePoints();
     }
@@ -131,7 +124,6 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public void lockBike() {
-        Toast.makeText(this, "Hi " + name + ", you have" + points + " points.", Toast.LENGTH_LONG).show();
         //Toast.makeText(this, "Hi " + name + ", you have " + points + " points.", Toast.LENGTH_LONG).show();
 
         new AlertDialog.Builder(this).setTitle("Confirmation")
@@ -144,22 +136,17 @@ public class MapsActivity extends AppCompatActivity
                             //add user points
                             points = user.getPoints() + 5;
                             //add to currentCapacity
-                            getBeacon(currentBeaconDetected.getBeaconID()).setCurCapacity(currentBeaconDetected.getCurCapacity() + 1);
                             beaconController.lockBike(currentBeaconDetected.getBeaconID());
                             user.setPoints(points);
                             Toast.makeText(MapsActivity.this, "Hurray! You have successfully parked your bike in a designated bike shed. You have been awarded 5 points! ", Toast.LENGTH_LONG).show();
                         } else {
                             //deduct from user points
                             points = user.getPoints() - 10;
-                            //add to currentCapacity
-                            getBeacon(currentBeaconDetected.getBeaconID()).setCurCapacity(currentBeaconDetected.getCurCapacity() + 1);
                             user.setPoints(points);
                             //Toast.makeText(MapsActivity.this, "Hi " + name + ", after locking you have " + points + " points.", Toast.LENGTH_LONG).show();
                             Toast.makeText(MapsActivity.this, "Oh no! Looks like you did not park your bike in a designated bike shed. 10 points has been deducted as a penalty! ", Toast.LENGTH_LONG).show();
                         }
-                        user.setPoints(points);
                         hasBike = false;
-                        Toast.makeText(MapsActivity.this, "Hi " + name + ", after locking you have " + points + " points.", Toast.LENGTH_LONG).show();
                         button.setImageResource(R.drawable.unlock);
                         updatePoints();
                     }
@@ -173,7 +160,6 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public void unlockBike() {
-        Toast.makeText(this, "Hi " + name + ", you have " + points + " points.", Toast.LENGTH_LONG).show();
 
         new AlertDialog.Builder(this).setTitle("Confirmation")
                 .setMessage("Do you want to unlock a bike here?")
@@ -183,7 +169,6 @@ public class MapsActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         if (isNearBeacon == true) {
                             //deduct from currentCapacity
-                            getBeacon(currentBeaconDetected.getBeaconID()).setCurCapacity(currentBeaconDetected.getCurCapacity() - 1);
                             beaconController.unlockBike(currentBeaconDetected.getBeaconID());
                         }
                         hasBike = true;
@@ -206,7 +191,6 @@ public class MapsActivity extends AppCompatActivity
         Log.d(TAG, "REFRESHING......");
         Log.d(TAG, "REFRESHING START");
 
-
         //Map<String, Marker> updatedBeacons = new HashMap<String, Marker>();
 
         //clear the markers on map
@@ -217,8 +201,6 @@ public class MapsActivity extends AppCompatActivity
 
         Log.d(TAG, "CHECK IF LIST IS EMPTY: " + list.toString());
 
-        for (Lot beacon: list) {
-
         int beaconsDetected = 0;
 
         for (Lot beacon : list) {
@@ -226,7 +208,6 @@ public class MapsActivity extends AppCompatActivity
             Log.d(TAG, "BEACON ID: " + beaconID);
             Double distance = beacon.getDist();
             Log.d(TAG, "BEACON DISTANCE: " + distance);
-            Marker marker = null;
             Marker marker;
 
 
@@ -235,12 +216,9 @@ public class MapsActivity extends AppCompatActivity
             if (distance.isNaN() == false) {
                 Log.d(TAG, "BEACON DETECTED");
                 currentBeaconDetected = beacon;
-                isNearBeacon = true;
                 beaconsDetected++;
             } else {
                 Log.d(TAG, "BEACON NOT DETECTED");
-                currentBeaconDetected = null;
-                isNearBeacon = false;
                 //currentBeaconDetected = null;
                 //isNearBeacon = false;
             }
@@ -251,8 +229,6 @@ public class MapsActivity extends AppCompatActivity
             Log.d(TAG, "MARKER DESCRIPTION: " + beacon.getDesc());
             Log.d(TAG, "MARKER CUR_CAPACITY: " + beacon.getCurCapacity());
             Log.d(TAG, "MARKER MAX_CAPACITY: " + beacon.getMaxCapacity());
-            marker = googleMap.addMarker(new MarkerOptions().position(latlng).title(beacon.getDesc() + " | Capacity: "
-                    + beacon.getCurCapacity() + "/" + beacon.getMaxCapacity()));
 
             MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(beacon.getDesc() + " | Capacity: "
                     + beacon.getCurCapacity() + "/" + beacon.getMaxCapacity());
@@ -280,12 +256,10 @@ public class MapsActivity extends AppCompatActivity
                 LatLng latlng = new LatLng(beacon.getGpsX(), beacon.getGpsY());
                 marker.setPosition(latlng);
                 detectedBeacons.remove(beacon.getBeaconID());
-
             }*/
             //Log.d(TAG, "updatedBeacons: " + updatedBeacons.toString());
             //updatedBeacons.put(beacon.getBeaconID(), marker);
         }
-
 
         if (beaconsDetected >= 1) {
             isNearBeacon = true;
@@ -307,7 +281,6 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
-
     public void callAsyncTask() {
         Log.wtf("Entering AsyncTask", "Entering AsyncTask");
         final Handler handler = new Handler();
@@ -319,9 +292,6 @@ public class MapsActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         try {
-
-
-
 
                             // put your code here
                             Log.wtf("Entering AsyncTask", "refreshingMarkers");
@@ -340,7 +310,6 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
-
     /**
      * Manipulates the map when it's available.
      * The API invokes this callback when the map is ready to be used.
@@ -352,7 +321,6 @@ public class MapsActivity extends AppCompatActivity
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -384,8 +352,6 @@ public class MapsActivity extends AppCompatActivity
             MarkerOptions markerOptions = new MarkerOptions().position(latlng).title(beaconDescription + " | Capacity: "
                     + curCapacity + "/" + maxCapacity);
 
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(latlng).title(beaconDescription + " | Capacity: "
-                    + curCapacity + "/" + maxCapacity));
             // check current capacity and change colour before placing onto the map
             if(curCapacity <= 15) {
                 //under capacity
@@ -403,16 +369,12 @@ public class MapsActivity extends AppCompatActivity
         /*
         LatLng smu_sis = new LatLng(1.2973784, 103.8495219);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_sis).title("SMU SIS Capacity: 1/5")));
-
         LatLng smu_soa = new LatLng(1.2956192, 103.8498277);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_soa).title("SMU SOA Capacity: 2/5")));
-
         LatLng smu_sob = new LatLng(1.2952545, 103.8505429);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_sob).title("SMU SOB Capacity: 3/5")));
-
         LatLng smu_soe = new LatLng(1.2979327, 103.8489191);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_soe).title("SMU SOE Capacity: 4/5")));
-
         LatLng smu_sol = new LatLng(1.2948224, 103.8495096);
         markers.add(googleMap.addMarker(new MarkerOptions().position(smu_sol).title("SMU SOL Capacity: 5/5")));
         */
