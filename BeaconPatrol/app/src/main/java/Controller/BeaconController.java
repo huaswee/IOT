@@ -44,6 +44,7 @@ public class BeaconController {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ");
             conn.setRequestProperty("Accept", "*/*");
+            conn.setInstanceFollowRedirects(false);
             //wr = new OutputStreamWriter(conn.getOutputStream());
 
             int status = conn.getResponseCode();
@@ -114,6 +115,7 @@ public class BeaconController {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ");
             conn.setRequestProperty("Accept", "*/*");
+            conn.setInstanceFollowRedirects(false);
             //wr = new OutputStreamWriter(conn.getOutputStream());
             conn.connect();
             int status = conn.getResponseCode();
