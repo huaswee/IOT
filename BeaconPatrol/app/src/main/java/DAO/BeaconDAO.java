@@ -21,12 +21,18 @@ public class BeaconDAO {
 
     //hardcoded list of values
     static {
-        lotMap.put("fda50693-a4e2-4fb1-afcf-c6eb07647825", new Lot("fda50693-a4e2-4fb1-afcf-c6eb07647825", "First Beacon",
+        //iot 26
+        lotMap.put("fda50693-a4e2-4fb1-afcf-c6eb07647825", new Lot("fda50693-a4e2-4fb1-afcf-c6eb07647825", "SMU SIS Capacity: ",
                 1.2973784, 103.8495219, 0, 20));
-        lotMap.put("0x02696f74736d757367303907", new Lot("0x02696f74736d757367303907", "Second Beacon",
+        //iot 09
+        lotMap.put("0x02696f74736d757367303907", new Lot("0x02696f74736d757367303907", "SMU SOA Capacity: ",
                 1.2956192, 103.8498277, 0, 20));
-        lotMap.put("fda50693-a4e2-4fb1-afcf-c6eb07647869", new Lot("fda50693-a4e2-4fb1-afcf-c6eb07647869", "Third Beacon",
+        //iot 36
+        lotMap.put("fda50693-a4e2-4fb1-afcf-c6eb07647869", new Lot("fda50693-a4e2-4fb1-afcf-c6eb07647869", "SMU SOB Capacity: ",
                 1.2952545, 103.8505429, 0, 20));
+        //iot 37
+        lotMap.put("fda50693-a4e2-4fb1-afcf-c6eb07647870", new Lot("fda50693-a4e2-4fb1-afcf-c6eb07647870", "SMU SOE Capacity: ",
+                1.2979327, 103.8489191, 0, 20));
         for (Map.Entry<String, Lot> pair : lotMap.entrySet()) {
             Lot lot = pair.getValue();
             lot.setCurCapacity(BeaconController.getBeaconCAP(lot.getBeaconID()));
